@@ -1,5 +1,5 @@
-<%- include('partials/_header') %> <%- include('partials/_navigation') %>
-
+<%- include('partials/_header') %> <%- include('partials/_navigation') %> <% if
+(user) { %>
 <div class="all-title-box">
   <div class="container text-center">
     <h1>
@@ -124,4 +124,4 @@
   <!-- end container -->
 </div>
 <!-- end section -->
-<%- include('partials/_footer') %>
+<% } %> <%- include('partials/_footer') %>
