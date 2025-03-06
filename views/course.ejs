@@ -46,7 +46,9 @@
               </h2>
             </div>
             <div class="blog-desc">
-              <blockquote class="default"><%= course.description %></blockquote>
+              <blockquote class="default">
+                <%= course.description.substring(0,100) + "..." %>
+              </blockquote>
             </div>
           </div>
         </div>
