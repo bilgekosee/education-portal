@@ -25,10 +25,9 @@ exports.loginUser = async (req, res) => {
       return res.status(404).send("User not found");
     }
     const same = bcrypt.compare(password, user.password);
-    if (same) {
-      req.session.userID = user._id;
-      return res.status(200).redirect("/users/dashboard");
-    }
+
+    req.session.userID = user._id;
+    return res.status(200).redirect("/users/dashboard");
   } catch (error) {
     res.status(400).json({
       status: "fail",
