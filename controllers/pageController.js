@@ -31,7 +31,8 @@ exports.getContactPage = (req, res) => {
 };
 
 exports.sendEmail = async (req, res) => {
-  const outputMessage = `
+  try {
+    const outputMessage = `
   <h1>Mail Details </h1>
   <ul>
 <li>Name: ${req.body.name}</li>
@@ -42,30 +43,36 @@ exports.sendEmail = async (req, res) => {
     <p>${req.body.message}</p>
   `;
 
-  const transporter = nodemailer.createTransport({
-    host: "smtp.gmail.com",
-    port: 465,
-    secure: true, // true for port 465, false for other ports
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  // async..await is not allowed in global scope, must use a wrapper
-  async function main() {
-    // send mail with defined transport object
-    const info = await transporter.sendMail({
-      from: `"Smart EDU Contact Form" <${process.env.EMAIL_USER}>`, // Gönderen adres
-      to: process.env.EMAIL_USER, // Alıcı adres (kendi e-posta adresin)
-      subject: "Smart EDU Contact Form", // Konu
-      html: outputMessage, // HTML gövde
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true, // true for port 465, false for other ports
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
     });
 
-    console.log("Message sent: %s", info.messageId);
+    // async..await is not allowed in global scope, must use a wrapper
+    async function main() {
+      // send mail with defined transport object
+      const info = await transporter.sendMail({
+        from: `"Smart EDU Contact Form" <${process.env.EMAIL_USER}>`, // Gönderen adres
+        to: process.env.EMAIL_USER, // Alıcı adres (kendi e-posta adresin)
+        subject: "Smart EDU Contact Form", // Konu
+        html: outputMessage, // HTML gövde
+      });
+
+      console.log("Message sent: %s", info.messageId);
+    }
+
+    main().catch(console.error);
+
+    req.flash("success", "We recieve your message succesfully");
+
+    res.status(200).redirect("contact");
+  } catch (err) {
+    req.flash("error", "Something happend :(");
+    res.status(200).redirect("contact");
   }
-
-  main().catch(console.error);
-
-  res.status(200).redirect("contact");
 };
