@@ -2,6 +2,7 @@ const Category = require("../models/Category");
 const Course = require("../models/Course");
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const { validationResult } = require("express-validator");
 
 exports.createUser = async (req, res) => {
   try {
@@ -9,10 +10,14 @@ exports.createUser = async (req, res) => {
 
     res.status(201).redirect("/login");
   } catch (error) {
-    res.status(400).json({
-      status: "fail",
-      error,
-    });
+    const errors = validationResult(req);
+    console.log(errors);
+    console.log(errors.array()[0].msg);
+    for (let i = 0; i < errors.array().length; i++) {
+      req.flash("error", `${errors.array()[i].msg} `);
+    }
+
+    res.status(400).redirect("/register");
   }
 };
 
