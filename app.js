@@ -21,7 +21,6 @@ mongoose
   .connect(process.env.MONGO_URI, {
     tls: true,
     tlsAllowInvalidCertificates: true,
-    directConnection: true,
   })
   .then(() => console.log("✅ MongoDB Atlas bağlantısı başarılı!"))
   .catch((err) => console.error("❌ MongoDB bağlantı hatası:", err));
