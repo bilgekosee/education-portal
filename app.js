@@ -8,20 +8,22 @@ const pageRoute = require("./routes/pageRoute");
 const courseRoute = require("./routes/courseRoute");
 const categoryRoute = require("./routes/categoryRoute");
 const userRoute = require("./routes/userRoute");
+require("dotenv").config();
 
 const app = express();
 
 //connect db
+
+//template engine
+app.set("view engine", "ejs");
+
 mongoose
-  .connect("mongodb://localhost/smartedu-db", {
+  .connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })
-  .then(() => {
-    console.log("DB connected success");
-  });
-//template engine
-app.set("view engine", "ejs");
+  .then(() => console.log("MongoDB Atlas bağlantısı başarılı!"))
+  .catch((err) => console.error("MongoDB bağlantı hatası:", err));
 
 //global veriable
 
@@ -37,7 +39,7 @@ app.use(
     secret: "my_keybord_cat",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({ mongoUrl: "mongodb://localhost/smartedu-db" }),
+    store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
   })
 );
 app.use(flash());
